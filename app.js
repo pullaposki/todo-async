@@ -6,10 +6,18 @@ displayToDos()
 
 async function displayToDos(){
     try {
+        const loadingElement = document.createElement('p');
+        loadingElement.textContent="Loading...";
+        document.body.appendChild(loadingElement);
+        
         const htmlResponse = await fetch(URL);
+        if(!htmlResponse.ok){
+            throw new Error(`Http error: ${htmlResponse.status}`)
+        }
+        
         const arrayOfObjects = await htmlResponse.json();
 
-        console.log(arrayOfObjects)
+        document.body.removeChild(loadingElement);
 
         for (const object of arrayOfObjects) {
             const dataContainer = document.createElement('p');
@@ -39,6 +47,8 @@ async function displayToDos(){
     
 }
 
+
+
 function handleCompleteClick(completeButton, dataObject, dataContainer, separator){
     console.log("Should make an api call to update complete status");
     dataContainer.style.textDecoration = "line-through";
@@ -46,11 +56,23 @@ function handleCompleteClick(completeButton, dataObject, dataContainer, separato
     completeButton.removeEventListener("click", () => handleCompleteClick);
     completeButton.disabled = true;
 
-    setTimeout(()=>{
-        document.body.removeChild(dataContainer)
-        document.body.removeChild(completeButton)
-        document.body.removeChild(separator)
-    }, 1000)
+    // Add the CSS class that starts the transition
+    dataContainer.classList.add('removing');
+    completeButton.classList.add('removing');
+    separator.classList.add('removing');
+
+    // Delay the actual removal until the transition is complete
+    setTimeout(() => {
+        dataContainer.classList.add('collapsing');
+        completeButton.classList.add('collapsing');
+        separator.classList.add('collapsing');
+    }, 10);
+
+    setTimeout(() => {
+        document.body.removeChild(dataContainer);
+        document.body.removeChild(completeButton);
+        document.body.removeChild(separator);
+    }, 600); // Duration of the transition in CSS    
 }
 
 

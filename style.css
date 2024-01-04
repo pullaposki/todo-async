@@ -1,0 +1,10 @@
+﻿.removing {
+    /* Modify according to your exact requirements */
+    height: 100px; /* Original height of the item */
+    transition: all 0.5s ease; /* Adjust transition time and easing function to your liking */
+}
+
+.removing.collapsing {
+    height: 0;
+    opacity: 0;
+}
